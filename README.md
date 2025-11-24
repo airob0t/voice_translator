@@ -172,8 +172,7 @@
 **打破语言壁垒，从现在开始！**
 
 **或下载已编译版本：**
-- [macOS 版本下载](https://www.doubao.com/drive/s/72185b103d339263)
-- [Windows 版本下载](https://www.doubao.com/drive/s/d253e86892852996)
+https://github.com/airob0t/voice_translator/releases
 
 ---
 

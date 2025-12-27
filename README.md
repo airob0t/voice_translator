@@ -133,7 +133,7 @@
 
 ### 获取帮助
 
-<img src="https://github.com/user-attachments/assets/dcd397bc-5313-4567-b327-48e7abdb0861" alt="飞书群" width="300">
+<img src="https://github.com/user-attachments/assets/5675e4d9-fc12-4c64-b20f-f914f55742b7" alt="飞书群" width="300">
 
 ### 常见问题
 

@@ -171,8 +171,8 @@
 
 **打破语言壁垒，从现在开始！**
 
-**或下载已编译版本：**
-https://github.com/airob0t/voice_translator/releases
+**下载和使用文档：**
+https://fcnxyalxhimh.feishu.cn/wiki/MOxTwUN3BiYG7DkmMruchpmxnue
 
 ---
 

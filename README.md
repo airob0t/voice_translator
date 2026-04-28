@@ -1,177 +1,64 @@
-# 🌐 星译语音实时语音翻译系统 - 功能介绍
+# xingyi_client
 
-> 打破语言壁垒，让跨语言沟通像说母语一样自然
+本项目现已精简为 **本机直连版语音翻译客户端**：
 
-## 💡 产品简介
+- 不做版本检查
+- 不连接自建登录/计费后端
+- 不保存登录态
+- 直接连接官方上游：
+  - **模型一 / 豆包**：`wss://openspeech.bytedance.com/v4/ast/v2/translate`
+  - **模型二 / Qwen**：`wss://dashscope.aliyuncs.com/api-ws/v1/realtime?model=qwen3-livetranslate-flash-realtime`
 
-这是一款**实时语音翻译系统**，专为视频会议、在线教育、直播等场景设计。通过虚拟音频设备技术，实现**几秒级**的双向实时翻译，让你在任何应用中都能流畅地进行跨语言交流。
+密钥在 GUI 内直接填写，仅保存在当前进程内存中。
 
-**核心特点：**
-- ⚡ **实时**：几秒级翻译
-- 🎯 **即插即用**：无需修改任何应用，通过虚拟音频设备自动工作
-- 🔄 **双向翻译**：同时支持说和听的实时翻译
-- 🎨 **图形界面**：简洁易用的 GUI，一键启动
+## 运行
 
----
+### GUI
 
-## 🚀 核心功能
-
-### 1️⃣ 智能双向翻译模式
-
-在**一个进程**中同时运行两个翻译流：
-
-```
-你说中文 ──→ 虚拟麦克风 ──→ 对方听到英文
-             ↑
-             │ 实时翻译引擎
-             ↓
-你听中文 ←── 物理扬声器 ←── 对方说英文
+```bash
+go run . --target=gui
 ```
 
-**适用场景：**
-- 🎥 **国际会议**：Zoom、Teams、腾讯会议等
-- 🎮 **游戏语音**：Discord、Steam 语音
-- 📚 **在线教育**：跨国远程授课
-- 💼 **商务谈判**：实时商务沟通
+GUI 中：
 
-### 2️⃣ 灵活的四种工作模式
+- 选择翻译模式
+- 选择模型
+- 按当前模型填写对应密钥
+  - 模型一：豆包 `APP ID` 和 `Access Token`
+  - 模型二：DashScope `API Key`
 
+### CLI
 
-| 模式 | 输入 | 输出 | 翻译方向 | 适用场景 |
-|------|------|------|---------|---------|
-| 🎤 **麦克风模式** | 物理麦克风 | 虚拟麦克风 | 中文→英文 | 你说话对方听翻译 |
-| 🔊 **扬声器模式** | 虚拟扬声器 | 物理扬声器 | 英文→中文 | 对方说话你听翻译 |
-| 🔄 **双向模式** | 物理麦+虚拟扬声器 | 虚拟麦+物理扬声器 | 双向 | 完整双向对话 |
-| 🧪 **回测模式** | 物理麦克风 | 物理扬声器 | 中文→英文 | 测试翻译效果 |
+CLI 仍可用环境变量预填充密钥：
 
-### 3️⃣ 界面易操作
+```bash
+export DOUBAO_APP_ID=your_app_id
+export DOUBAO_ACCESS_KEY=your_access_token
+export QWEN_API_KEY=your_dashscope_api_key
+```
 
-<img width="1072" height="532" alt="桌面端" src="https://github.com/user-attachments/assets/301c9b57-c309-4259-ab6f-7aa6c029beb5" />
+然后执行：
 
-<img width="640" height="400" alt="浏览器插件" src="https://github.com/user-attachments/assets/0da3c3bc-224e-41aa-90c9-f4f049f0589a" />
+```bash
+go run . --target=ast
+go run . --target=sts
+go run . --target=mic2vmic
+go run . --target=vspeaker2pspeaker
+go run . --target=bidirectional
+```
 
+## 测试
 
-**特点：**
-- 🎯 **一键启动**：选择设备，点击启动即可
-- 📊 **实时状态**：显示翻译状态和日志信息
-- 🎛️ **独立控制**：双向模式下可单独控制麦克风和扬声器
-- 📱 **跨平台**：支持 macOS 和 Windows
+```bash
+go test ./...
+go test -tags=integration ./...
+RUN_RACE=1 bash scripts/run-automated-tests.sh
+```
 
-**操作步骤：**
-1. 从下拉列表选择麦克风和扬声器设备
-2. 选择翻译模式（单向/双向/回测）
-3. 点击"启动"按钮
-4. 开始使用！
+## Proto 生成
 
-## 🎯 实际应用场景
+如需重新生成 proto 代码，参考：
 
-
-### 场景一：跨国视频会议 🌍
-
-**问题：** 参加国际会议，语言不通影响沟通效率
-
-**解决方案：**
-1. 在 Zoom 中选择"Translator Audio Device"作为麦克风和扬声器
-2. 启动双向翻译模式
-3. 你说中文，对方听到流畅的英文
-4. 对方说英文，你听到实时的中文翻译
-
-**效果：** 沟通无障碍，就像说同一种语言
-
-### 场景二：在线教育授课 📚
-
-**问题：** 跨国学生需要实时翻译课程内容
-
-**解决方案：**
-- 教师使用麦克风模式（中文→英文）
-- 学生端使用扬声器模式（英文→中文）
-
-**效果：** 师生实时互动，语言不再是学习障碍
-
-**效果：** 跨国组队无压力，游戏体验更佳
-
-### 场景三：商务洽谈 💼
-
-**问题：** 与海外客户沟通需要翻译，影响效率
-
-**解决方案：**
-- 使用双向翻译模式进行视频通话
-- 实时翻译确保信息准确传达
-- 无需第三方翻译人员
-
-**效果：** 沟通更高效，节省时间和成本
-
----
-
-## 📦 系统说明
-
-### macOS
-
-安装包内含有虚拟音频驱动，但是驱动还没有提交苹果签名认证，所以无法直接使用（可以关闭SIP后使用）。
-
-安装驱动后，系统音频设备就会多出translator audio音频设备，在需要翻译的软件或者系统中选择此音频设备即可接入翻译系统。
-
-### windows
-
-1. 先解压VB-CABLE.zip,安装VBCABLE_A_Driver_Pack43中的VBCABLE_Setup_x64.exe和VBCABLE_B_Driver_Pack43中的VBCABLE_Setup_x64.exe
-2. 安装完两个驱动后重启电脑
-3. 打开软件,选择使用的物理设备
-4. 在需要翻译的软件中麦克风选择CABLE-A Output, 扬声器选择CABLE-B Input.
-  如果软件不支持选择音频设备,可以在系统设置中将默认输入设备修改为CABLE-A Output,默认输出设备修改为CABLE-B Input. 此时其他软件及系统声音都会经过翻译
-5. 配置好后,点击启动
----
-
-## 🤝 支持与反馈
-
-### 获取帮助
-
-<img width="300" height="500" alt="qrcode_1775564356552" src="https://github.com/user-attachments/assets/0813af14-0c9c-4c41-a30d-ccdc43d60af3" />
-
-<img src="https://github.com/user-attachments/assets/5675e4d9-fc12-4c64-b20f-f914f55742b7" alt="飞书群" width="300">
-
-### 常见问题
-
-<details>
-<summary><b>Q: 支持哪些语言翻译？</b></summary>
-<p>
-目前主要支持中英互译，未来将支持更多语言对。可通过配置自定义翻译方向。
-</p>
-</details>
-
-<details>
-<summary><b>Q: 翻译质量如何？</b></summary>
-<p>
-采用企业级语音翻译服务，准确率高。在安静环境下、清晰发音的情况下，翻译准确度可达 90% 以上。
-</p>
-</details>
-
-<details>
-<summary><b>Q: 是否支持离线使用？</b></summary>
-<p>
-当前版本需要网络连接到翻译服务。离线版本正在开发中。
-</p>
-</details>
-
-<details>
-<summary><b>Q: 可以商用吗？</b></summary>
-<p>
-具体授权方式请联系商务团队咨询。
-</p>
-</details>
-
----
-
-## 🎉 立即体验
-
-**打破语言壁垒，从现在开始！**
-
-**下载和使用文档：**
-https://fcnxyalxhimh.feishu.cn/wiki/MOxTwUN3BiYG7DkmMruchpmxnue
-
----
-
-<div align="center">
-
-**让世界没有语言的距离** 🌏
-
-</div>
+```bash
+protos/HOWTO.md
+```

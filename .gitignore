@@ -1,0 +1,15 @@
+config.yaml
+.DS_Store
+debug*.opus
+xingyi_client
+c_examples
+
+# Packaging artifacts
+packaging/build/
+packaging/root/
+packaging/scripts/
+packaging/*.pkg
+
+.omc/
+.omx/
+.claude/

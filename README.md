@@ -1,64 +1,91 @@
-# xingyi_client
+# 🌐 星译语音实时语音翻译系统 - 功能介绍
 
-本项目现已精简为 **本机直连版语音翻译客户端**：
+## 💡 简介
 
-- 不做版本检查
-- 不连接自建登录/计费后端
-- 不保存登录态
-- 直接连接官方上游：
-  - **模型一 / 豆包**：`wss://openspeech.bytedance.com/v4/ast/v2/translate`
-  - **模型二 / Qwen**：`wss://dashscope.aliyuncs.com/api-ws/v1/realtime?model=qwen3-livetranslate-flash-realtime`
+这是一款**实时语音翻译系统**，专为视频会议、在线教育、直播等场景设计。通过虚拟音频设备技术，实现**几秒级**的双向实时翻译，让你在任何应用中都能流畅地进行跨语言交流。
 
-密钥在 GUI 内直接填写，仅保存在当前进程内存中。
+使用需要自行填写豆包同声传译2.0（火山方舟）/千问实时翻译API key，两家均有试用额度。
 
-## 运行
 
-### GUI
+**核心特点：**
+- ⚡ **实时**：几秒级翻译
+- 🎯 **即插即用**：无需修改任何应用，通过虚拟音频设备自动工作
+- 🔄 **双向翻译**：同时支持说和听的实时翻译
+- 🎨 **图形界面**：简洁易用的 GUI，一键启动
+- 📱 **跨平台**：支持 macOS 和 Windows
 
-```bash
-go run . --target=gui
+---
+
+## 🚀 核心功能
+
+### 1️⃣ 智能双向翻译模式
+
+在**一个进程**中同时运行两个翻译流：
+
+```
+你说中文 ──→ 虚拟麦克风 ──→ 对方听到英文
+             ↑
+             │ 实时翻译引擎
+             ↓
+你听中文 ←── 物理扬声器 ←── 对方说英文
 ```
 
-GUI 中：
+**适用场景：**
+- 🎥 **国际会议**：Zoom、Teams、腾讯会议等
+- 🎮 **游戏语音**：Discord、Steam 语音
+- 📚 **在线教育**：跨国远程授课
+- 💼 **商务谈判**：实时商务沟通
 
-- 选择翻译模式
-- 选择模型
-- 按当前模型填写对应密钥
-  - 模型一：豆包 `APP ID` 和 `Access Token`
-  - 模型二：DashScope `API Key`
+### 2️⃣ 灵活的四种工作模式
 
-### CLI
 
-CLI 仍可用环境变量预填充密钥：
+| 模式 | 输入 | 输出 | 翻译方向 | 适用场景 |
+|------|------|------|---------|---------|
+| 🎤 **麦克风模式** | 物理麦克风 | 虚拟麦克风 | 中文→英文 | 你说话对方听翻译 |
+| 🔊 **扬声器模式** | 虚拟扬声器 | 物理扬声器 | 英文→中文 | 对方说话你听翻译 |
+| 🔄 **双向模式** | 物理麦+虚拟扬声器 | 虚拟麦+物理扬声器 | 双向 | 完整双向对话 |
+| 🧪 **回测模式** | 物理麦克风 | 物理扬声器 | 中文→英文 | 测试翻译效果 |
 
-```bash
-export DOUBAO_APP_ID=your_app_id
-export DOUBAO_ACCESS_KEY=your_access_token
-export QWEN_API_KEY=your_dashscope_api_key
-```
+### 3️⃣ 界面
 
-然后执行：
+<img width="1072" height="532" alt="桌面端" src="./screenshot.png" />
 
-```bash
-go run . --target=ast
-go run . --target=sts
-go run . --target=mic2vmic
-go run . --target=vspeaker2pspeaker
-go run . --target=bidirectional
-```
 
-## 测试
+**操作步骤：**
+1. 从下拉列表选择麦克风和扬声器设备
+2. 选择翻译模式（单向/双向/回测）
+3. 配置API
+4. 启动
 
-```bash
-go test ./...
-go test -tags=integration ./...
-RUN_RACE=1 bash scripts/run-automated-tests.sh
-```
 
-## Proto 生成
+## 📦 系统说明
 
-如需重新生成 proto 代码，参考：
+### macOS
 
-```bash
-protos/HOWTO.md
-```
+安装包内含有虚拟音频驱动，但是驱动没有提交苹果签名认证，所以无法直接使用（可以关闭SIP后使用）。
+
+安装驱动后，系统音频设备就会多出translator audio音频设备，在需要翻译的软件或者系统中选择此音频设备即可接入翻译系统。
+
+### windows
+
+1. 先解压VB-CABLE.zip,安装VBCABLE_A_Driver_Pack43中的VBCABLE_Setup_x64.exe和VBCABLE_B_Driver_Pack43中的VBCABLE_Setup_x64.exe
+2. 安装完两个驱动后重启电脑
+3. 打开软件,选择使用的物理设备
+4. 在需要翻译的软件中麦克风选择CABLE-A Output, 扬声器选择CABLE-B Input.
+  如果软件不支持选择音频设备,可以在系统设置中将默认输入设备修改为CABLE-A Output,默认输出设备修改为CABLE-B Input. 此时其他软件及系统声音都会经过翻译
+5. 配置好后,点击启动
+---
+
+### 定制/商用
+
+*qairobot@gmail.com*
+
+---
+
+## 免配置API付费版（预计2026年中下线）
+
+**下载和使用文档：**
+https://fcnxyalxhimh.feishu.cn/wiki/MOxTwUN3BiYG7DkmMruchpmxnue
+
+---
+
